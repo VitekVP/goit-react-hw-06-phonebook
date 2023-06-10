@@ -1,10 +1,18 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { nanoid } from 'nanoid';
+import { toast } from 'react-toastify';
+
+import { getContacts } from 'redux/selectors';
+import { addElement } from 'redux/contactsSlise';
 import { FormPhonebook, Label, Input, Btn } from './ContactForm.styled';
 
-export const Form = ({ onSubmit }) => {
+export const Form = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
 
   const handleInputChange = event => {
     const { name, value } = event.target;
@@ -21,10 +29,30 @@ export const Form = ({ onSubmit }) => {
     }
   };
 
+  const addContact = (name, number) => {
+    const normalizedName = name.toLocaleLowerCase();
+    const findName = contacts.find(
+      contact => contact.name.toLocaleLowerCase() === normalizedName
+    );
+
+    if (findName) {
+      toast.error(`${name} is already in the contacts`);
+      return;
+    }
+
+    const newContact = {
+      name,
+      number,
+      id: nanoid(),
+    };
+
+    dispatch(addElement(newContact));
+  };
+
   const handleSubmit = event => {
     event.preventDefault();
 
-    onSubmit({ name, number });
+    addContact(name, number);
 
     setName('');
     setNumber('');
@@ -59,8 +87,4 @@ export const Form = ({ onSubmit }) => {
       <Btn type="submit">Add contact</Btn>
     </FormPhonebook>
   );
-};
-
-Form.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
 };
