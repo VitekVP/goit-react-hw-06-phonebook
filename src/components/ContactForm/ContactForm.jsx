@@ -30,13 +30,23 @@ export const Form = () => {
   };
 
   const addContact = (name, number) => {
-    const normalizedName = name.toLocaleLowerCase();
+    const normalizedName = name.toLocaleLowerCase().trim();
     const findName = contacts.find(
       contact => contact.name.toLocaleLowerCase() === normalizedName
     );
 
     if (findName) {
       toast.error(`${name} is already in the contacts`);
+      return;
+    }
+
+    const normalizedNumber = number.toLocaleLowerCase().trim();
+    const findNumber = contacts.find(
+      contact => contact.number.toLocaleLowerCase() === normalizedNumber
+    );
+
+    if (findNumber) {
+      toast.error(`${number} is already in the contacts`);
       return;
     }
 
@@ -47,15 +57,14 @@ export const Form = () => {
     };
 
     dispatch(addElement(newContact));
+    setName('');
+    setNumber('');
   };
 
   const handleSubmit = event => {
     event.preventDefault();
 
     addContact(name, number);
-
-    setName('');
-    setNumber('');
   };
 
   return (
