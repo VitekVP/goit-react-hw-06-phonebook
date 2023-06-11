@@ -15,7 +15,7 @@ export const App = () => {
       <Subtitle>Contacts</Subtitle>
       <Filter />
       <ContactList />
-      <ToastContainer theme="colored" autoClose={2000} position="top-right" />
+      <ToastContainer theme="colored" autoClose={4000} position="top-right" />
     </Container>
   );
 };
